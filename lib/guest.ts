@@ -237,6 +237,21 @@ export const weekdays = [
   { value: 5, label: "週五" },
 ];
 
+export const periodSlots = ["1", "2", "3", "4", "N", "5", "6", "7", "8"] as const;
+
+export function coursePeriod(course: GuestCourse) {
+  const match = course.periods.match(/(\d+)(?:\s*[–−-]\s*(\d+))?/);
+  const period = Number(match?.[1] ?? 1);
+  const last = Number(match?.[2] ?? period);
+  return { period, span: last - period + 1 };
+}
+
+export function gridRowFor(period: number | string) {
+  if (period === "N") return 6;
+  const n = Number(period);
+  return n <= 4 ? n + 1 : n + 2;
+}
+
 function taipeiParts(date = new Date()) {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Taipei",
