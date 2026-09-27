@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_TC, Poiret_One } from "next/font/google";
 import Script from "next/script";
+import { SiteNav } from "./site-nav";
 import "./globals.css";
 
 const sans = Noto_Sans_TC({
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="theme-boot" strategy="beforeInteractive">
           {themeBoot}
         </Script>
+        <SiteNav />
         {children}
       </body>
     </html>

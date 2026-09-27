@@ -4,10 +4,7 @@
   --ink: oklch(0.27 0.014 75);
   --muted: oklch(0.42 0.02 70);
   --faint: oklch(0.55 0.02 75);
-  --line: oklch(0.72 0.02 80 / 0.38);
   --glass: oklch(0.985 0.008 95 / 0.58);
-  --glass-edge: oklch(1 0 0 / 0.72);
-  --glass-shine: oklch(1 0 0 / 0.75);
   --field: oklch(1 0 0 / 0.48);
   --chip: oklch(1 0 0 / 0.28);
   --pine: oklch(0.31 0.028 168);
@@ -26,6 +23,8 @@
   --wash-b: oklch(0.88 0.07 158 / 0.9);
   --wash-c: oklch(0.9 0.07 68 / 0.95);
   --wash-d: oklch(0.9 0.05 230 / 0.8);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: light;
 }
 
@@ -34,10 +33,7 @@ html[data-theme="dark"] {
   --ink: oklch(0.94 0.012 90);
   --muted: oklch(0.78 0.016 85);
   --faint: oklch(0.7 0.014 82);
-  --line: oklch(0.8 0.015 85 / 0.2);
   --glass: oklch(0.27 0.014 75 / 0.5);
-  --glass-edge: oklch(0.96 0.01 90 / 0.16);
-  --glass-shine: oklch(1 0 0 / 0.14);
   --field: oklch(0.18 0.01 75 / 0.42);
   --chip: oklch(1 0 0 / 0.06);
   --pine: oklch(0.8 0.045 165);
@@ -64,10 +60,7 @@ html[data-theme="dark"] {
     --ink: oklch(0.94 0.012 90);
     --muted: oklch(0.78 0.016 85);
     --faint: oklch(0.7 0.014 82);
-    --line: oklch(0.8 0.015 85 / 0.2);
     --glass: oklch(0.27 0.014 75 / 0.5);
-    --glass-edge: oklch(0.96 0.01 90 / 0.16);
-    --glass-shine: oklch(1 0 0 / 0.14);
     --field: oklch(0.18 0.01 75 / 0.42);
     --chip: oklch(1 0 0 / 0.06);
     --pine: oklch(0.8 0.045 165);
@@ -105,6 +98,9 @@ body {
   font-family: var(--font-noto), "PingFang TC", "Microsoft JhengHei", sans-serif;
   font-weight: 400;
   line-height: 1.55;
+  transition:
+    color 0.55s var(--ease-out),
+    background-color 0.55s var(--ease-out);
 }
 
 body::before {
@@ -185,11 +181,14 @@ h1 {
 
 .glass {
   background: var(--glass);
-  border: 1px solid var(--glass-edge);
-  border-radius: 18px;
-  box-shadow: var(--shadow), inset 0 1px 0 var(--glass-shine);
-  backdrop-filter: blur(18px) saturate(1.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  border: 0;
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  transition:
+    background-color 0.55s var(--ease-out),
+    box-shadow 0.55s var(--ease-out);
 }
 
 .query {
@@ -207,10 +206,13 @@ h1 {
   flex: 1;
   min-width: 0;
   height: 3rem;
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 12px;
   background: var(--field);
   padding: 0 0.95rem;
+  transition:
+    background-color 0.55s var(--ease-out),
+    color 0.55s var(--ease-out);
 }
 
 .search input::placeholder {
@@ -225,6 +227,10 @@ h1 {
   background: var(--pine);
   color: var(--pine-ink);
   cursor: pointer;
+  transition:
+    transform 0.22s var(--ease-out),
+    background-color 0.45s var(--ease-out),
+    color 0.45s var(--ease-out);
 }
 
 .search button:active {
@@ -251,9 +257,12 @@ h1 {
 .check {
   width: 100%;
   height: 2.7rem;
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 10px;
   background-color: var(--field);
+  transition:
+    background-color 0.45s var(--ease-out),
+    color 0.45s var(--ease-out);
 }
 
 .field select {
@@ -281,6 +290,9 @@ h1 {
   padding: 0 0.85rem;
   cursor: pointer;
   user-select: none;
+  transition:
+    background-color 0.4s var(--ease-out),
+    color 0.4s var(--ease-out);
 }
 
 .check input {
@@ -293,7 +305,6 @@ h1 {
 .check:has(input:checked) {
   background: var(--pine);
   color: var(--pine-ink);
-  border-color: transparent;
 }
 
 .chips {
@@ -308,17 +319,19 @@ h1 {
   align-items: center;
   min-height: 1.85rem;
   padding: 0 0.7rem;
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 999px;
   background: var(--chip);
   font-size: 0.82rem;
   text-decoration: none;
+  transition:
+    background-color 0.4s var(--ease-out),
+    color 0.4s var(--ease-out);
 }
 
 .chip[aria-current="true"] {
   background: var(--ink);
   color: var(--pine-ink);
-  border-color: transparent;
 }
 
 .results {
@@ -345,7 +358,10 @@ h1 {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.75rem 1.25rem;
   padding: 0.95rem 0.9rem 1rem;
-  border-top: 1px solid var(--line);
+}
+
+.row + .row {
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--ink) 8%, transparent);
 }
 
 .row h2 {
@@ -435,7 +451,6 @@ h1 {
 .empty {
   margin: 0;
   padding: 1.6rem 0.9rem 1.5rem;
-  border-top: 1px solid var(--line);
   color: var(--muted);
 }
 
@@ -444,7 +459,6 @@ h1 {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.85rem 0.9rem 0.9rem;
-  border-top: 1px solid var(--line);
   font-size: 0.92rem;
 }
 
@@ -487,6 +501,7 @@ h1 {
 @media (max-width: 640px) {
   .shell {
     width: min(100% - 1.25rem, 920px);
+    padding-top: 4.5rem;
   }
 
   .title-row {
@@ -542,46 +557,268 @@ h1 {
   letter-spacing: 0.18em;
 }
 
+.site-nav {
+  position: fixed;
+  top: 1rem;
+  right: 1.1rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.nav-login {
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: color 0.4s var(--ease-out);
+}
+
+.nav-login:hover,
+.nav-login[aria-expanded="true"] {
+  color: var(--ink);
+}
+
+.login-dialog {
+  width: min(22.5rem, calc(100% - 2rem));
+  margin: auto;
+  padding: 1.55rem 1.4rem 1.3rem;
+  border: 0;
+  border-radius: 22px;
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 0.5s var(--ease-out-soft),
+    transform 0.58s var(--ease-out-soft),
+    overlay 0.9s allow-discrete,
+    display 0.9s allow-discrete;
+}
+
+.login-dialog[open] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@starting-style {
+  .login-dialog[open] {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+}
+
+.login-dialog::backdrop {
+  background-color: color-mix(in oklch, var(--ink) 0%, transparent);
+  backdrop-filter: blur(0.01px) saturate(1);
+  -webkit-backdrop-filter: blur(0.01px) saturate(1);
+  transition:
+    background-color 0.72s var(--ease-out-soft),
+    backdrop-filter 0.9s var(--ease-out-soft),
+    -webkit-backdrop-filter 0.9s var(--ease-out-soft),
+    overlay 0.9s allow-discrete,
+    display 0.9s allow-discrete;
+}
+
+.login-dialog[open]::backdrop {
+  background-color: color-mix(in oklch, var(--ink) 18%, transparent);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+}
+
+@starting-style {
+  .login-dialog[open]::backdrop {
+    background-color: color-mix(in oklch, var(--ink) 0%, transparent);
+    backdrop-filter: blur(0.01px) saturate(1);
+    -webkit-backdrop-filter: blur(0.01px) saturate(1);
+  }
+}
+
+.login-dialog-title {
+  margin: 0 0 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.login-soon {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+}
+
+.login-frost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(18px);
+  mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 52%,
+    #000 0%,
+    #000 10%,
+    rgb(0 0 0 / 0.82) 32%,
+    rgb(0 0 0 / 0.42) 50%,
+    rgb(0 0 0 / 0.14) 66%,
+    transparent 84%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 52%,
+    #000 0%,
+    #000 10%,
+    rgb(0 0 0 / 0.82) 32%,
+    rgb(0 0 0 / 0.42) 50%,
+    rgb(0 0 0 / 0.14) 66%,
+    transparent 84%
+  );
+}
+
+.login-dialog .login-frost {
+  opacity: 0;
+  filter: blur(0.01px);
+  transition:
+    opacity 0.8s 0.04s var(--ease-out-soft),
+    filter 0.95s var(--ease-out-soft);
+}
+
+.login-dialog[open] .login-frost {
+  opacity: 1;
+  filter: blur(18px);
+}
+
+@starting-style {
+  .login-dialog[open] .login-frost {
+    opacity: 0;
+    filter: blur(0.01px);
+  }
+}
+
+.login-fields {
+  display: grid;
+  gap: 0.7rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.15rem;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.login-field {
+  display: block;
+}
+
+.login-fields input {
+  width: 100%;
+  height: 2.7rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--field);
+  padding: 0 0.85rem;
+}
+
+.login-fields input:disabled {
+  opacity: 1;
+  color: var(--faint);
+}
+
+.login-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background: radial-gradient(
+    ellipse 70% 58% at 50% 52%,
+    color-mix(in oklch, var(--canvas) 38%, transparent),
+    transparent 74%
+  );
+  font-family: var(--font-poiret), sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.22em;
+}
+
+.login-dialog .login-veil {
+  opacity: 0;
+  transition: opacity 0.8s 0.06s var(--ease-out-soft);
+}
+
+.login-dialog[open] .login-veil {
+  opacity: 1;
+}
+
+@starting-style {
+  .login-dialog[open] .login-veil {
+    opacity: 0;
+  }
+}
+
+.login-panel .enter {
+  margin-top: 1.15rem;
+}
+
 .theme-switch {
   display: grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0;
-  border: 1px solid var(--glass-edge);
+  border: 0;
   border-radius: 999px;
-  background: var(--glass);
-  box-shadow: inset 0 1px 0 var(--glass-shine);
-  backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  background: transparent;
   color: var(--ink);
   cursor: pointer;
+  transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+
+.theme-switch:hover {
+  background: color-mix(in oklch, var(--ink) 6%, transparent);
 }
 
 .theme-switch svg {
+  grid-area: 1 / 1;
   width: 1.1rem;
   height: 1.1rem;
+  transition:
+    opacity 0.45s var(--ease-out),
+    transform 0.45s var(--ease-out);
 }
 
 .theme-switch .icon-sun {
-  display: none;
+  opacity: 0;
+  transform: rotate(-18deg) scale(0.86);
 }
 
 html[data-theme="dark"] .theme-switch .icon-moon {
-  display: none;
+  opacity: 0;
+  transform: rotate(18deg) scale(0.86);
 }
 
 html[data-theme="dark"] .theme-switch .icon-sun {
-  display: block;
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) .theme-switch .icon-moon {
-    display: none;
+    opacity: 0;
+    transform: rotate(18deg) scale(0.86);
   }
 
   html:not([data-theme="light"]) .theme-switch .icon-sun {
-    display: block;
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -592,11 +829,6 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   min-height: 100svh;
   margin: 0 auto;
   padding: 1.25rem 0 2.75rem;
-}
-
-.landing-top {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .landing-center {
@@ -628,42 +860,74 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   letter-spacing: 0.02em;
 }
 
-.landing-sheet {
-  width: fit-content;
-  margin-top: 2.15rem;
-  padding: 0.35rem;
-}
-
 .enter {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 11rem;
-  padding: 0.95rem 1.5rem;
+  margin-top: 1.6rem;
+  padding: 0.2rem 0;
   border: 0;
-  border-radius: 14px;
   background: transparent;
-  color: inherit;
+  color: var(--muted);
   font: inherit;
-  font-size: 1.12rem;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
+  font-size: 1.02rem;
+  text-align: left;
   cursor: pointer;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .enter {
-    transition: background-color 160ms ease;
-  }
+  transition: color 0.4s var(--ease-out);
 }
 
 .enter:hover {
-  background: var(--field);
+  color: var(--ink);
 }
 
 @media (max-width: 640px) {
   .landing {
     width: min(100% - 1.4rem, 720px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-dialog,
+  .login-dialog::backdrop,
+  .login-dialog .login-frost,
+  .login-dialog .login-veil,
+  .nav-login,
+  .theme-switch,
+  .theme-switch svg,
+  .enter,
+  .chip,
+  .check,
+  .search button,
+  .search input,
+  .field select,
+  body,
+  .glass {
+    transition: none;
+  }
+
+  .login-dialog,
+  .login-dialog[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .login-dialog[open]::backdrop {
+    background-color: color-mix(in oklch, var(--ink) 18%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .login-dialog .login-frost,
+  .login-dialog[open] .login-frost {
+    opacity: 1;
+    filter: blur(18px);
+  }
+
+  .login-dialog .login-veil,
+  .login-dialog[open] .login-veil {
+    opacity: 1;
+  }
+
+  .theme-switch svg {
+    transform: none;
   }
 }
