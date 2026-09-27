@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_TC, Poiret_One } from "next/font/google";
 import Script from "next/script";
+import { getSession } from "@/lib/session";
 import { SiteNav } from "./site-nav";
 import "./globals.css";
 
@@ -28,7 +29,9 @@ export const metadata: Metadata = {
   description: "OpenNPTU",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const session = await getSession();
+
   return (
     <html
       lang="zh-Hant"
@@ -39,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="theme-boot" strategy="beforeInteractive">
           {themeBoot}
         </Script>
-        <SiteNav />
+        <SiteNav signedIn={session != null} />
         {children}
       </body>
     </html>
