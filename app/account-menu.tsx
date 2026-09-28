@@ -54,10 +54,12 @@ export function AccountMenu({ signedIn }: { signedIn: boolean }) {
       >
         {signedIn ? (
           <div className="nav-account-body">
-            <p className="nav-account-name">{guestUser.name}</p>
-            <p className="nav-account-id">{guestUser.studentId}</p>
+            <p className="nav-account-who">
+              <span className="nav-account-name">{guestUser.name}</span>
+              <span className="nav-account-id">{guestUser.studentId}</span>
+            </p>
             <form action={logout}>
-              <button className="enter" type="submit">
+              <button className="enter is-danger" type="submit">
                 登出
               </button>
             </form>
