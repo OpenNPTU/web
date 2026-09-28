@@ -161,49 +161,12 @@ select {
   outline-offset: 3px;
 }
 
-.shell {
-  width: min(920px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: clamp(2.5rem, 7vh, 4.5rem) 0 4.5rem;
-}
-
-.title-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem;
-  margin-top: 0.35rem;
-}
-
 h1 {
   margin: 0;
   font-size: clamp(2.6rem, 6vw, 3.6rem);
   font-weight: 500;
   letter-spacing: -0.045em;
   line-height: 1;
-}
-
-.term-note {
-  margin: 0 0 0.35rem;
-  text-align: right;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-
-.glass {
-  background: var(--glass);
-  border: 0;
-  border-radius: 22px;
-  box-shadow: var(--shadow);
-  transition:
-    background-color 0.55s var(--ease-out),
-    box-shadow 0.55s var(--ease-out);
-}
-
-.query {
-  margin-top: 1.75rem;
-  padding: 1.15rem 1.15rem 1rem;
 }
 
 .search-row {
@@ -257,28 +220,20 @@ h1 {
 
 .filters {
   display: grid;
-  grid-template-columns: 1.15fr 1.7fr 0.8fr 0.85fr 0.8fr auto;
+  grid-template-columns: 1.15fr 1.7fr 0.8fr 0.85fr 0.8fr;
   gap: 0.7rem 0.65rem;
   margin-top: 0.9rem;
   align-items: end;
 }
 
-.field select,
-.check {
+.field select {
+  appearance: none;
   width: 100%;
   height: 2.7rem;
+  padding: 0 1.9rem 0 0.75rem;
   border: 0;
   border-radius: 10px;
   background-color: var(--field);
-  transition:
-    background-color 0.45s var(--ease-out),
-    color 0.45s var(--ease-out);
-}
-
-.field select {
-  appearance: none;
-  padding: 0 1.9rem 0 0.75rem;
-  text-overflow: ellipsis;
   background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
     linear-gradient(135deg, var(--muted) 50%, transparent 50%);
   background-position:
@@ -288,33 +243,10 @@ h1 {
     5px 5px,
     5px 5px;
   background-repeat: no-repeat;
-}
-
-.check {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  width: auto;
-  min-width: 6.5rem;
-  padding: 0 0.85rem;
-  cursor: pointer;
-  user-select: none;
+  text-overflow: ellipsis;
   transition:
-    background-color 0.4s var(--ease-out),
-    color 0.4s var(--ease-out);
-}
-
-.check input {
-  width: 0.95rem;
-  height: 0.95rem;
-  margin: 0;
-  accent-color: var(--pine);
-}
-
-.check:has(input:checked) {
-  background: var(--pine);
-  color: var(--pine-ink);
+    background-color 0.45s var(--ease-out),
+    color 0.45s var(--ease-out);
 }
 
 .chips {
@@ -344,11 +276,6 @@ h1 {
   color: var(--pine-ink);
 }
 
-.results {
-  margin-top: 0.9rem;
-  padding: 0.35rem 0.35rem 0.2rem;
-}
-
 .summary {
   display: flex;
   justify-content: space-between;
@@ -361,25 +288,6 @@ h1 {
 
 .summary a {
   color: var(--ink);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.75rem 1.25rem;
-  padding: 0.95rem 0.9rem 1rem;
-}
-
-.row + .row {
-  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--ink) 8%, transparent);
-}
-
-.row h2 {
-  margin: 0;
-  font-size: 1.12rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
 }
 
 .title-line {
@@ -447,23 +355,6 @@ h1 {
   color: var(--muted);
 }
 
-.seats {
-  margin: 0.15rem 0 0;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.92rem;
-  white-space: nowrap;
-}
-
-.seats.full {
-  color: var(--full);
-}
-
-.empty {
-  margin: 0;
-  padding: 1.6rem 0.9rem 1.5rem;
-  color: var(--muted);
-}
-
 .pager {
   display: flex;
   justify-content: space-between;
@@ -480,49 +371,13 @@ h1 {
   color: var(--faint);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .row {
-    animation: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--i) * 28ms);
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 860px) {
   .filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .check {
-    width: 100%;
-  }
 }
 
 @media (max-width: 640px) {
-  .shell {
-    width: min(100% - 1.25rem, 920px);
-    padding-top: 4.5rem;
-  }
-
-  .title-row {
-    display: block;
-  }
-
-  .term-note {
-    margin-top: 0.8rem;
-    text-align: left;
-  }
-
   .search-row {
     align-items: stretch;
   }
@@ -534,16 +389,6 @@ h1 {
   .filters {
     grid-template-columns: 1fr;
   }
-
-  .row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-    gap: 0.45rem 0.75rem;
-  }
-
-  .seats {
-    margin-top: 0.12rem;
-  }
 }
 
 .wordmark {
@@ -552,19 +397,6 @@ h1 {
   letter-spacing: 0.14em;
   line-height: 0.9;
   text-decoration: none;
-}
-
-.site-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.6rem;
-}
-
-.site-bar .wordmark {
-  font-size: 1.65rem;
-  letter-spacing: 0.18em;
 }
 
 .site-nav {
@@ -1023,7 +855,6 @@ html[data-theme="dark"] .theme-switch .icon-sun {
 }
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .glass,
   .dash-nav,
   .dash-panel,
   .dash-day,
@@ -1217,6 +1048,83 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   padding: 1.15rem 0.2rem 0.25rem;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.dash-lead {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.dash-panel-head + .dash-lead {
+  margin-top: 0;
+}
+
+.dash-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.dash-gate h2 {
+  margin: 0;
+}
+
+.dash-gate p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.dash-gate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1.1rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dash-gate-list a {
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: color 0.4s var(--ease-out);
+}
+
+.dash-gate-list a:hover {
+  color: var(--ink);
+}
+
+.dash-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.dash-course {
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  background: var(--field);
+}
+
+.dash-course h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.dash-panel .summary {
+  padding: 0 0 0.85rem;
+}
+
+.dash-panel .pager {
+  padding: 0.85rem 0 0;
 }
 
 .dash-meetings,
@@ -1786,12 +1694,10 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   .theme-switch svg,
   .enter,
   .chip,
-  .check,
   .search button,
   .search input,
   .field select,
-  body,
-  .glass {
+  body {
     transition: none;
   }
 

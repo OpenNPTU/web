@@ -1,38 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { taipeiClock } from "@/lib/guest";
 import {
   coursePeriod,
   gridRowFor,
-  guestCourses,
   isInProgress,
   periodSlots,
-  semesterLabel,
-  taipeiClock,
   weekdays,
-  type GuestCourse,
-} from "@/lib/guest";
+  type TimetableCourse,
+} from "@/lib/timetable";
 import { PageHeader } from "../page-header";
 
-export function ScheduleView() {
+export function ScheduleView({ courses }: { courses: TimetableCourse[] }) {
   const now = taipeiClock();
   const today = now.weekday;
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = guestCourses.find((course) => course.id === selectedId) ?? null;
-  const credits = guestCourses.reduce((sum, course) => sum + course.credits, 0);
+  const selected = courses.find((course) => course.id === selectedId) ?? null;
+  const credits = courses.reduce((sum, course) => sum + course.credits, 0);
 
   return (
     <>
-      <PageHeader eyebrow={semesterLabel} title="課表查詢">
+      <PageHeader eyebrow="個人課表" title="課表查詢">
         <p className="dash-meta">
-          {guestCourses.length} 堂 · {credits} 學分
+          {courses.length} 堂 · {credits} 學分
         </p>
       </PageHeader>
 
       <div className="tt-shell">
         <div className="tt-board">
           <TimetableGrid
+            courses={courses}
             today={today}
+            now={now.time}
             selectedId={selectedId}
             onSelect={(id) => setSelectedId((current) => (current === id ? null : id))}
           />
@@ -44,11 +44,15 @@ export function ScheduleView() {
 }
 
 function TimetableGrid({
+  courses,
   today,
+  now,
   selectedId,
   onSelect,
 }: {
+  courses: TimetableCourse[];
   today: number;
+  now: string;
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
@@ -82,9 +86,9 @@ function TimetableGrid({
         )),
       )}
 
-      {guestCourses.map((course) => {
+      {courses.map((course) => {
         const { period, span } = coursePeriod(course);
-        const live = isInProgress(course);
+        const live = isInProgress(course, now, today);
         const selected = selectedId === course.id;
         return (
           <button
@@ -113,7 +117,7 @@ function TimetableGrid({
   );
 }
 
-function CourseDetail({ course, onClose }: { course: GuestCourse | null; onClose: () => void }) {
+function CourseDetail({ course, onClose }: { course: TimetableCourse | null; onClose: () => void }) {
   if (!course) {
     return (
       <aside className="tt-detail is-empty">

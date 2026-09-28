@@ -6,19 +6,26 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/dashboard", label: "總覽" },
-  { href: "/dashboard/schedule", label: "課表查詢" },
-  { href: "/dashboard/grades", label: "成績查詢" },
-  { href: "/dashboard/attendance", label: "出缺勤" },
+  { href: "/dashboard/courses", label: "課程查詢" },
+  { href: "/dashboard/schedule", label: "課表查詢", studentOnly: true },
+  { href: "/dashboard/grades", label: "成績查詢", studentOnly: true },
+  { href: "/dashboard/attendance", label: "出缺勤", studentOnly: true },
 ];
 
 const mobileQuery = "(max-width: 859px)";
 
-export function DashNav() {
+function activePath(href: string, path: string) {
+  if (href === "/dashboard") return path === "/dashboard";
+  return path === href || path.startsWith(`${href}/`);
+}
+
+export function DashNav({ student }: { student: boolean }) {
   const path = usePathname();
   const root = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const current = items.find((item) => item.href === path) ?? items[0];
+  const visible = items.filter((item) => !item.studentOnly || student);
+  const current = visible.find((item) => activePath(item.href, path)) ?? visible[0];
   const menuHidden = mobile && !open;
 
   useEffect(() => {
@@ -79,11 +86,15 @@ export function DashNav() {
         </svg>
       </button>
       <ul id="dash-menu" className="dash-links" aria-hidden={menuHidden} inert={menuHidden || undefined}>
-        {items.map((item) => {
-          const active = path === item.href;
+        {visible.map((item) => {
+          const active = activePath(item.href, path);
           return (
             <li key={item.href}>
-              <Link href={item.href} className="dash-link" aria-current={active ? "page" : undefined}>
+              <Link
+                href={item.href}
+                className="dash-link"
+                aria-current={active ? "page" : undefined}
+              >
                 {item.label}
               </Link>
             </li>

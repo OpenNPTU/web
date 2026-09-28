@@ -4,7 +4,11 @@ import { redirect } from "next/navigation";
 export const SESSION_COOKIE = "session";
 export const GUEST_SESSION = "guest";
 
-export type Session = { kind: "guest" };
+export type Session = { kind: "guest" } | { kind: "student" };
+
+export function isStudent(session: Session) {
+  return session.kind === "student";
+}
 
 export async function getSession(): Promise<Session | null> {
   const jar = await cookies();

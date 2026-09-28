@@ -1,12 +1,12 @@
-import { requireSession } from "@/lib/session";
+import { isStudent, requireSession } from "@/lib/session";
 import { DashNav } from "./nav";
 
 export default async function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
-  await requireSession();
+  const session = await requireSession();
 
   return (
     <div className="dash">
-      <DashNav />
+      <DashNav student={isStudent(session)} />
       <main className="dash-main">{children}</main>
     </div>
   );

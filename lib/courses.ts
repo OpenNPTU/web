@@ -32,7 +32,6 @@ export type Section = {
   credits: number | null;
   capacity: number | null;
   enrolled: number | null;
-  openSeats: number | null;
   room: string;
   roomSeats: number | null;
   prerequisites: string;
@@ -53,7 +52,6 @@ export type CourseQuery = {
   period?: string;
   tag?: string;
   elective?: string;
-  openSeatsOnly?: boolean;
   limit?: number;
   offset?: number;
 };
@@ -282,9 +280,6 @@ function filters(query: CourseQuery): { where: string; params: SqlParams } {
     where.push("s.elective = @elective");
     params.elective = query.elective;
   }
-  if (query.openSeatsOnly) {
-    where.push("s.open_seats > 0");
-  }
   if (query.tag) {
     where.push(
       "s.id IN (SELECT section_id FROM section_tags WHERE tag = @tag)",
@@ -385,7 +380,6 @@ function hydrate(db: DatabaseSync, ids: number[]): Section[] {
       credits: nullableNumber(row.credits),
       capacity: nullableNumber(row.capacity),
       enrolled: nullableNumber(row.enrolled),
-      openSeats: nullableNumber(row.open_seats),
       room: text(row.room),
       roomSeats: nullableNumber(row.room_seats),
       prerequisites: text(row.prerequisites),
