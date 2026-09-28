@@ -220,7 +220,7 @@ h1 {
 
 .filters {
   display: grid;
-  grid-template-columns: 1.15fr 1.7fr 0.8fr 0.85fr 0.8fr;
+  grid-template-columns: 1.1fr 1.6fr 1.5fr 0.85fr;
   gap: 0.7rem 0.65rem;
   margin-top: 0.9rem;
   align-items: end;
@@ -247,6 +247,320 @@ h1 {
   transition:
     background-color 0.45s var(--ease-out),
     color 0.45s var(--ease-out);
+}
+
+.slot-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 2.7rem;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--field);
+  color: var(--faint);
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition:
+    background-color 0.45s var(--ease-out),
+    color 0.45s var(--ease-out);
+}
+
+.slot-trigger.is-on,
+.slot-trigger[aria-expanded="true"] {
+  color: var(--ink);
+}
+
+.slot-dialog,
+.term-dialog {
+  width: min(38rem, calc(100% - 1.4rem));
+  max-height: min(46rem, calc(100% - 3.5rem));
+  margin: auto;
+  padding: 1.2rem 1.15rem 1.05rem;
+  border: 0;
+  border-radius: 22px;
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  overflow: auto;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 0.5s var(--ease-out-soft),
+    transform 0.58s var(--ease-out-soft),
+    overlay 0.9s allow-discrete,
+    display 0.9s allow-discrete;
+}
+
+.term-dialog {
+  width: min(24.5rem, calc(100% - 1.4rem));
+  max-height: min(36rem, calc(100% - 3.5rem));
+}
+
+.slot-dialog[open],
+.term-dialog[open] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@starting-style {
+  .slot-dialog[open],
+  .term-dialog[open] {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+}
+
+.slot-dialog::backdrop,
+.term-dialog::backdrop {
+  background-color: color-mix(in oklch, var(--ink) 0%, transparent);
+  backdrop-filter: blur(0.01px) saturate(1);
+  -webkit-backdrop-filter: blur(0.01px) saturate(1);
+  transition:
+    background-color 0.72s var(--ease-out-soft),
+    backdrop-filter 0.9s var(--ease-out-soft),
+    -webkit-backdrop-filter 0.9s var(--ease-out-soft),
+    overlay 0.9s allow-discrete,
+    display 0.9s allow-discrete;
+}
+
+.slot-dialog[open]::backdrop,
+.term-dialog[open]::backdrop {
+  background-color: color-mix(in oklch, var(--ink) 18%, transparent);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+}
+
+@starting-style {
+  .slot-dialog[open]::backdrop,
+  .term-dialog[open]::backdrop {
+    background-color: color-mix(in oklch, var(--ink) 0%, transparent);
+    backdrop-filter: blur(0.01px) saturate(1);
+    -webkit-backdrop-filter: blur(0.01px) saturate(1);
+  }
+}
+
+.slot-dialog-head,
+.term-dialog-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0 0 0.85rem;
+}
+
+.slot-dialog-head h2,
+.term-dialog-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.slot-dialog-head h2:focus,
+.term-dialog-head h2:focus {
+  outline: none;
+}
+
+.slot-dialog-lead,
+.term-dialog-lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.slot-board {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.slot-grid {
+  display: grid;
+  min-width: 22rem;
+  grid-template-columns: 2.5rem repeat(5, minmax(3.2rem, 1fr));
+  grid-template-rows: auto repeat(9, minmax(2.55rem, 1fr));
+  gap: 0.28rem;
+  user-select: none;
+  touch-action: none;
+}
+
+.slot-day,
+.slot-period,
+.slot-cell {
+  margin: 0;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.slot-day,
+.slot-period {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.15rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.slot-period {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--canvas);
+}
+
+.slot-day.is-on,
+.slot-period.is-on {
+  background: color-mix(in oklch, var(--pine) 14%, var(--field));
+  color: var(--ink);
+}
+
+.slot-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  background: color-mix(in oklch, var(--ink) 8%, var(--canvas));
+  color: var(--pine-ink);
+  font-size: 0.78rem;
+}
+
+.slot-cell:hover {
+  background: color-mix(in oklch, var(--ink) 14%, var(--canvas));
+}
+
+.slot-cell.is-on {
+  background: var(--pine);
+  color: var(--pine-ink);
+}
+
+.slot-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.95rem;
+}
+
+.slot-dialog-actions .enter {
+  margin-top: 0;
+}
+
+.slot-apply {
+  height: 2.55rem;
+  padding: 0 1.15rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--pine);
+  color: var(--pine-ink);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.22s var(--ease-out),
+    background-color 0.45s var(--ease-out);
+}
+
+.slot-apply:active {
+  transform: scale(0.98);
+}
+
+.term-years {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.32rem;
+}
+
+.term-year,
+.term-season {
+  margin: 0;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.term-year {
+  height: 2.45rem;
+  border-radius: 12px;
+  background: color-mix(in oklch, var(--ink) 8%, var(--canvas));
+  color: var(--ink);
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+}
+
+.term-year:hover {
+  background: color-mix(in oklch, var(--ink) 14%, var(--canvas));
+}
+
+.term-year.is-on,
+.term-year.is-on:hover {
+  background: var(--pine);
+  color: var(--pine-ink);
+}
+
+.term-seasons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+
+.term-season {
+  min-height: 4.6rem;
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--ink) 8%, var(--canvas));
+  color: var(--ink);
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+.term-season:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--ink) 14%, var(--canvas));
+}
+
+.term-season.is-on,
+.term-season.is-on:hover {
+  background: var(--pine);
+  color: var(--pine-ink);
+}
+
+.term-season:disabled {
+  color: var(--faint);
+  cursor: default;
+  opacity: 0.42;
+}
+
+@media (max-width: 640px) {
+  .slot-dialog,
+  .term-dialog {
+    width: calc(100% - 1rem);
+    padding: 1rem 0.75rem 0.9rem;
+  }
+
+  .slot-grid {
+    min-width: 0;
+    grid-template-columns: 1.9rem repeat(5, minmax(0, 1fr));
+    gap: 0.22rem;
+  }
+
+  .slot-day,
+  .slot-period {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.05rem;
+  }
 }
 
 .chips {
@@ -1703,6 +2017,10 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   .login-dialog::backdrop,
   .login-dialog .login-frost,
   .login-dialog .login-veil,
+  .slot-dialog,
+  .slot-dialog::backdrop,
+  .term-dialog,
+  .term-dialog::backdrop,
   .nav-login,
   .nav-menu-panel,
   .dash-nav,
@@ -1727,12 +2045,23 @@ html[data-theme="dark"] .theme-switch .icon-sun {
   .search button,
   .search input,
   .field select,
+  .slot-trigger,
+  .slot-day,
+  .slot-period,
+  .slot-cell,
+  .slot-apply,
+  .term-year,
+  .term-season,
   body {
     transition: none;
   }
 
   .login-dialog,
   .login-dialog[open],
+  .slot-dialog,
+  .slot-dialog[open],
+  .term-dialog,
+  .term-dialog[open],
   .nav-menu-panel,
   .nav-menu.is-open .nav-menu-panel,
   .dash-nav.is-open .dash-links {
@@ -1751,7 +2080,9 @@ html[data-theme="dark"] .theme-switch .icon-sun {
     pointer-events: none;
   }
 
-  .login-dialog[open]::backdrop {
+  .login-dialog[open]::backdrop,
+  .slot-dialog[open]::backdrop,
+  .term-dialog[open]::backdrop {
     background-color: color-mix(in oklch, var(--ink) 18%, transparent);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);

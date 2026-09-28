@@ -2,6 +2,10 @@
 
 import type { FormEvent, ReactNode } from "react";
 import { useFormStatus } from "react-dom";
+import type { TimeSlot } from "@/lib/slots";
+import type { Term } from "@/lib/terms";
+import { SlotPicker } from "./slot-picker";
+import { TermPicker } from "./term-picker";
 
 type Choice = { value: string; label: string };
 
@@ -9,14 +13,11 @@ type QueryFormProps = {
   q: string;
   term: string;
   dept: string;
-  weekday: string;
-  period: string;
+  slots: TimeSlot[];
   elective: string;
   tag: string;
-  semesters: Choice[];
+  terms: Term[];
   departments: Choice[];
-  weekdays: Choice[];
-  periods: Choice[];
   electives: Choice[];
 };
 
@@ -59,24 +60,7 @@ export function QueryForm(props: QueryFormProps) {
       </label>
 
       <div className="filters">
-        <Field label="學期">
-          <select
-            name="term"
-            defaultValue={props.term}
-            onChange={(event) => {
-              const form = event.currentTarget.form;
-              const dept = form?.elements.namedItem("dept");
-              if (dept instanceof HTMLSelectElement) dept.value = "";
-              submit(form);
-            }}
-          >
-            {props.semesters.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <TermPicker value={props.term} terms={props.terms} />
         <Field label="系所">
           <select
             name="dept"
@@ -91,34 +75,7 @@ export function QueryForm(props: QueryFormProps) {
             ))}
           </select>
         </Field>
-        <Field label="星期">
-          <select
-            name="weekday"
-            defaultValue={props.weekday}
-            onChange={(event) => submit(event.currentTarget.form)}
-          >
-            <option value="">不拘</option>
-            {props.weekdays.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field label="節次">
-          <select
-            name="period"
-            defaultValue={props.period}
-            onChange={(event) => submit(event.currentTarget.form)}
-          >
-            <option value="">不拘</option>
-            {props.periods.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </Field>
+        <SlotPicker value={props.slots} />
         <Field label="必選">
           <select
             name="elective"

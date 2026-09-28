@@ -50,6 +50,7 @@ export type CourseQuery = {
   code?: string;
   weekday?: number;
   period?: string;
+  slots?: Array<{ weekday: number; period: string }>;
   tag?: string;
   elective?: string;
   limit?: number;
@@ -301,7 +302,22 @@ function filters(query: CourseQuery): { where: string; params: SqlParams } {
     params.teacher = teacher;
   }
 
-  if (query.weekday != null || query.period) {
+  const slots = query.slots?.filter((slot) => slot.weekday > 0 && slot.period) ?? [];
+  if (slots.length) {
+    const ors = slots.map((_, index) => `(m.weekday = @sw${index} AND p.period = @sp${index})`);
+    slots.forEach((slot, index) => {
+      params[`sw${index}`] = slot.weekday;
+      params[`sp${index}`] = slot.period;
+    });
+    where.push(
+      `s.id IN (
+        SELECT m.section_id
+        FROM meetings m
+        JOIN meeting_periods p ON p.section_id = m.section_id AND p.ord = m.ord
+        WHERE ${ors.join(" OR ")}
+      )`,
+    );
+  } else if (query.weekday != null || query.period) {
     const parts = ["1 = 1"];
     if (query.weekday != null) {
       parts.push("m.weekday = @weekday");

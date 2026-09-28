@@ -5,14 +5,13 @@ import { catalogueHref, parseCatalogueQuery } from "@/lib/catalogue-query";
 import { courses, type Section } from "@/lib/courses";
 import {
   ELECTIVE_OPTIONS,
-  PERIOD_OPTIONS,
   TAG_LABEL,
-  WEEKDAY_OPTIONS,
   electiveLabel,
   formatCredits,
   formatMeetings,
   formatRoom,
 } from "@/lib/schedule";
+import { toDbPeriod } from "@/lib/slots";
 import { PageHeader } from "../page-header";
 
 const PAGE_SIZE = 20;
@@ -46,8 +45,10 @@ export default async function CoursesPage({ searchParams }: PageProps<"/dashboar
     semester: query.semester,
     text: query.q || undefined,
     dept: query.dept || undefined,
-    weekday: query.weekday ? Number(query.weekday) : undefined,
-    period: query.period || undefined,
+    slots: query.slots.map((slot) => ({
+      weekday: slot.weekday,
+      period: toDbPeriod(slot.period),
+    })),
     tag: query.tag || undefined,
     elective: query.elective || undefined,
     limit: PAGE_SIZE,
@@ -61,7 +62,7 @@ export default async function CoursesPage({ searchParams }: PageProps<"/dashboar
 
   const active = { ...query, page };
   const filtered =
-    query.q || query.dept || query.weekday || query.period || query.tag || query.elective;
+    query.q || query.dept || query.slots.length || query.tag || query.elective;
   const from = result.total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const to = Math.min(page * PAGE_SIZE, result.total);
 
@@ -77,23 +78,17 @@ export default async function CoursesPage({ searchParams }: PageProps<"/dashboar
           q={query.q}
           term={`${query.year}-${query.semester}`}
           dept={query.dept}
-          weekday={query.weekday}
-          period={query.period}
+          slots={query.slots}
           elective={query.elective}
           tag={query.tag}
-          semesters={semesters.map((semester) => ({
-            value: `${semester.schoolYear}-${semester.semester}`,
-            label:
-              semester.semester === 3
-                ? `${semester.schoolYear} 暑`
-                : `${semester.schoolYear}-${semester.semester}`,
+          terms={semesters.map((semester) => ({
+            year: semester.schoolYear,
+            semester: semester.semester,
           }))}
           departments={departments.map((department) => ({
             value: department.dept,
             label: department.dept,
           }))}
-          weekdays={WEEKDAY_OPTIONS}
-          periods={PERIOD_OPTIONS}
           electives={ELECTIVE_OPTIONS}
         />
         <div className="chips" aria-label="課程標記">
@@ -121,7 +116,7 @@ export default async function CoursesPage({ searchParams }: PageProps<"/dashboar
               : `第 ${from.toLocaleString("zh-Hant")}–${to.toLocaleString("zh-Hant")} 筆`}
           </span>
           {filtered ? (
-            <Link href={catalogueHref(active, { q: "", dept: "", weekday: "", period: "", tag: "", elective: "", page: 1 })}>
+            <Link href={catalogueHref(active, { q: "", dept: "", slots: [], tag: "", elective: "", page: 1 })}>
               清除條件
             </Link>
           ) : (
@@ -129,7 +124,7 @@ export default async function CoursesPage({ searchParams }: PageProps<"/dashboar
           )}
         </p>
         {result.sections.length === 0 ? (
-          <p className="dash-empty">放寬星期、系所，或換一個詞再查。</p>
+          <p className="dash-empty">放寬時間、系所，或換一個詞再查。</p>
         ) : (
           <div className="dash-courses">
             {result.sections.map((section) => (
