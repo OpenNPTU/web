@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.grok
+*.md
+AGENTS.md
+CLAUDE.md
+tsconfig.tsbuildinfo
