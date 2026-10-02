@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const items = [
   { href: "/dashboard", label: "總覽" },
   { href: "/dashboard/courses", label: "課程查詢" },
-  { href: "/dashboard/schedule", label: "課表查詢", studentOnly: true },
+  { href: "/dashboard/schedule", label: "我的課表", studentOnly: true },
   { href: "/dashboard/grades", label: "成績查詢", studentOnly: true },
   { href: "/dashboard/attendance", label: "出缺勤", studentOnly: true },
   { href: "/dashboard/profile", label: "個人資料", studentOnly: true },

@@ -5,6 +5,7 @@ import { isStudent, requireSession } from "@/lib/session";
 import { ExpiredPanel } from "../expired";
 import { PageHeader } from "../page-header";
 import { RestrictedPage } from "../restricted";
+import { Spoiler } from "./spoiler";
 
 export const metadata: Metadata = {
   title: "個人資料",
@@ -44,7 +45,7 @@ export default async function ProfilePage() {
               {group.fields.map((field) => (
                 <div key={field.label}>
                   <dt>{field.label}</dt>
-                  <dd>{field.value}</dd>
+                  <dd>{field.sensitive ? <Spoiler value={field.value} /> : field.value}</dd>
                 </div>
               ))}
             </dl>

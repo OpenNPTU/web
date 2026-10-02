@@ -6,9 +6,16 @@
 
 import { inputValue, selectValue } from "./html";
 
+export type ProfileField = {
+  label: string;
+  value: string;
+  /** Rendered behind a click-to-reveal spoiler. */
+  sensitive?: boolean;
+};
+
 export type ProfileGroup = {
   title: string;
-  fields: Array<{ label: string; value: string }>;
+  fields: ProfileField[];
 };
 
 export type Profile = {
@@ -34,8 +41,8 @@ export function parseProfile(html: string): Profile {
         ["姓名", name],
         ["英文姓名", inputValue(html, "txtSTD_ENAME")],
         ["性別", optionLabel(selectValue(html, "ddlSEX_M"))],
-        ["出生年月日", birth],
-        ["身分證字號", inputValue(html, "txtIDNO")],
+        ["出生年月日", birth, true],
+        ["身分證字號", inputValue(html, "txtIDNO"), true],
         ["學籍目前狀態", optionLabel(selectValue(html, "ddlNOW_M"))],
         ["學生身分別", optionLabel(selectValue(html, "ddlSTDTP_M"))],
         ["費用別", optionLabel(selectValue(html, "ddlFEE_NOW_M"))],
@@ -46,20 +53,20 @@ export function parseProfile(html: string): Profile {
     {
       title: "聯絡資料",
       fields: compact([
-        ["電子信箱", inputValue(html, "txtEMAIL")],
-        ["行動電話", inputValue(html, "txtMOBILE_TEL")],
-        ["電話", inputValue(html, "txtNOW_TEL")],
-        ["通訊地址", nowAddress],
-        ["戶籍地址", regAddress],
-        ["戶籍電話", inputValue(html, "txtREG_TEL")],
+        ["電子信箱", inputValue(html, "txtEMAIL"), true],
+        ["行動電話", inputValue(html, "txtMOBILE_TEL"), true],
+        ["電話", inputValue(html, "txtNOW_TEL"), true],
+        ["通訊地址", nowAddress, true],
+        ["戶籍地址", regAddress, true],
+        ["戶籍電話", inputValue(html, "txtREG_TEL"), true],
       ]),
     },
     {
       title: "緊急聯絡人",
       fields: compact([
-        ["聯絡人", inputValue(html, "txtURGENT_MAN")],
-        ["電話", inputValue(html, "txtURGENT_TEL")],
-        ["行動電話", inputValue(html, "txtURGENT_MOBILE")],
+        ["聯絡人", inputValue(html, "txtURGENT_MAN"), true],
+        ["電話", inputValue(html, "txtURGENT_TEL"), true],
+        ["行動電話", inputValue(html, "txtURGENT_MOBILE"), true],
       ]),
     },
     {
@@ -71,10 +78,16 @@ export function parseProfile(html: string): Profile {
   return { studentId, name, groups: groups.filter((group) => group.fields.length > 0) };
 }
 
-function compact(pairs: Array<[string, string]>): ProfileGroup["fields"] {
+function compact(
+  pairs: Array<[label: string, value: string, sensitive?: boolean]>,
+): ProfileField[] {
   return pairs
     .filter(([, value]) => value)
-    .map(([label, value]) => ({ label, value }));
+    .map(([label, value, sensitive]) => ({
+      label,
+      value,
+      ...(sensitive ? { sensitive: true } : {}),
+    }));
 }
 
 function joinAddress(zip: string, address: string): string {

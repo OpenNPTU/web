@@ -133,7 +133,9 @@ export function toTimetableCourses(report: ScheduleReport): TimetableCourse[] {
   const courses: TimetableCourse[] = [];
   for (const course of report.courses) {
     course.meetings.forEach((meeting, meetingIndex) => {
-      if (meeting.weekday < 1 || meeting.periods.length === 0) return;
+      // The grid and the weekly recurrence both assume Mon–Fri; weekend
+      // meetings (星期 [6]) would fall outside the grid columns.
+      if (meeting.weekday < 1 || meeting.weekday > 5 || meeting.periods.length === 0) return;
       const first = meeting.periods[0];
       const last = meeting.periods[meeting.periods.length - 1];
       courses.push({

@@ -8,13 +8,13 @@ import { RestrictedPage } from "../restricted";
 import { ScheduleView } from "./schedule-view";
 
 export const metadata: Metadata = {
-  title: "課表查詢",
+  title: "我的課表",
 };
 
 export default async function SchedulePage() {
   const session = await requireSession();
   if (!isStudent(session)) {
-    return <RestrictedPage title="課表查詢" />;
+    return <RestrictedPage title="我的課表" />;
   }
 
   let courses;
@@ -27,7 +27,7 @@ export default async function SchedulePage() {
       return toTimetableCourses(parseSchedule(page.html));
     });
   } catch (error) {
-    if (error instanceof UpstreamSessionExpired) return <ExpiredPanel title="課表查詢" />;
+    if (error instanceof UpstreamSessionExpired) return <ExpiredPanel title="我的課表" />;
     throw error;
   }
 
