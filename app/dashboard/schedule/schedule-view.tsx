@@ -18,16 +18,10 @@ type Tip = { course: TimetableCourse; anchor: DOMRect };
 export function ScheduleView({ courses }: { courses: TimetableCourse[] }) {
   const now = taipeiClock();
   const today = now.weekday;
-  const credits = courses.reduce((sum, course) => sum + course.credits, 0);
 
   return (
     <>
-      <PageHeader eyebrow="本學期" title="我的課表">
-        <p className="dash-meta">
-          {courses.length} 堂 · {credits} 學分
-        </p>
-      </PageHeader>
-
+      <PageHeader eyebrow="本學期" title="我的課表" />
       <div className="tt-board">
         <TimetableGrid courses={courses} today={today} now={now.time} />
       </div>
