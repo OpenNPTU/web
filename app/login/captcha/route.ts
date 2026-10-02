@@ -1,3 +1,4 @@
+import { allow, clientIp } from "@/lib/nptu/rate-limit";
 import { getPendingLogin } from "@/lib/nptu/store";
 
 // Relays the school's captcha image for a pending login attempt. The image is
@@ -8,6 +9,12 @@ export async function GET(request: Request) {
   const client = getPendingLogin(attemptId);
   if (!client) {
     return new Response("login attempt expired", { status: 410 });
+  }
+
+  // Throttled per attempt: the initial load passes (fresh bucket), but
+  // scripted refresh spam degrades to one upstream fetch per refill.
+  if (!allow(`captcha:${attemptId}`, clientIp(request.headers))) {
+    return new Response("too many requests", { status: 429 });
   }
 
   try {

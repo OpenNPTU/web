@@ -1,9 +1,10 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { NptuClient } from "@/lib/nptu/client";
+import { allow, clientIp } from "@/lib/nptu/rate-limit";
 import {
   createPendingLogin,
   dropPendingLogin,
@@ -27,14 +28,24 @@ export async function loginAsGuest() {
 
 /** Opens an upstream session and returns the id the captcha route needs. */
 export async function createLoginAttempt(): Promise<string> {
+  // Rate-limited: each attempt holds an upstream session, so unauthenticated
+  // spam would turn NPTUweb into a load amplifier against the school.
+  if (!allow("attempt", clientIp(await headers()))) {
+    throw new Error("login attempt creation too frequent");
+  }
+  return openAttempt();
+}
+
+async function openAttempt(): Promise<string> {
   const client = new NptuClient();
   await client.begin();
   return createPendingLogin(client);
 }
 
 async function openFreshAttempt(): Promise<string | null> {
+  // Internal path — its caller (loginStudent) was already rate-limited.
   try {
-    return await createLoginAttempt();
+    return await openAttempt();
   } catch (cause) {
     console.error("nptu fresh login attempt failed", cause);
     return null;
@@ -59,6 +70,16 @@ export async function loginStudent(
     return { error: "請填齊學號、密碼與驗證碼。", nextAttemptId: null };
   }
 
+  // Throttled per IP before anything upstream is touched. The submitted
+  // attempt is still valid and unconsumed, so it is handed straight back —
+  // the form stays usable after the wait.
+  if (!allow("login", clientIp(await headers()), 1)) {
+    return {
+      error: "嘗試太頻繁，請等幾秒再送出。",
+      nextAttemptId: attemptId || null,
+    };
+  }
+
   const client = getPendingLogin(attemptId);
   if (!client) {
     return { error: "登入階段已過期，請重新整理頁面再試。", nextAttemptId: null };
@@ -69,7 +90,11 @@ export async function loginStudent(
     result = await client.submitLogin(account, password, checkCode);
   } catch (cause) {
     console.error("nptu login request failed", cause);
-    return { error: "連不上校務系統，請稍後再試。", nextAttemptId: null };
+    dropPendingLogin(attemptId);
+    return {
+      error: "連不上校務系統，請稍後再試。",
+      nextAttemptId: await openFreshAttempt(),
+    };
   }
   if (!result.ok) {
     // The upstream session for this attempt is dirty now (captcha consumed,

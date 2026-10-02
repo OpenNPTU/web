@@ -8,6 +8,7 @@
 
 const ORIGIN = "https://webap2.nptu.edu.tw";
 const WEB1 = `${ORIGIN}/Web1`;
+const ALLOWED_HOST = "webap2.nptu.edu.tw";
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
@@ -227,6 +228,15 @@ export class NptuClient {
     return !check.html.includes("CommonHeader_lblName");
   }
 
+  private assertSameHost(url: string): void {
+    const host = new URL(url).host;
+    if (host !== ALLOWED_HOST) {
+      throw new Error(
+        `Refusing to send requests off ${ALLOWED_HOST} (target host: ${host})`,
+      );
+    }
+  }
+
   private cookieHeader(): string {
     return [...this.cookies].map(([name, value]) => `${name}=${value}`).join("; ");
   }
@@ -249,6 +259,11 @@ export class NptuClient {
     let method = init.method ?? "GET";
     let body = init.body;
     for (let hop = 0; hop < 6; hop += 1) {
+      // The jar is not domain-scoped, so the host pin is what guarantees the
+      // student's session cookies can only ever travel to the school —
+      // checked on every hop, because redirect targets and postback form
+      // actions are upstream-controlled data.
+      this.assertSameHost(current);
       const headers: Record<string, string> = {
         "user-agent": UA,
         accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
