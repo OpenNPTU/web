@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { guestUser } from "@/lib/guest";
 import { logout } from "./login/actions";
 import { LoginPanel } from "./login-panel";
 
-export function AccountMenu({ signedIn }: { signedIn: boolean }) {
+export type NavUser = { name: string; studentId: string };
+
+export function AccountMenu({ user }: { user: NavUser | null }) {
+  const signedIn = user != null;
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -42,7 +44,7 @@ export function AccountMenu({ signedIn }: { signedIn: boolean }) {
         aria-controls="account-menu"
         onClick={() => setOpen((value) => !value)}
       >
-        {signedIn ? guestUser.name : "登入"}
+        {user ? user.name : "登入"}
       </button>
       <div
         id="account-menu"
@@ -55,8 +57,8 @@ export function AccountMenu({ signedIn }: { signedIn: boolean }) {
         {signedIn ? (
           <div className="nav-account-body">
             <p className="nav-account-who">
-              <span className="nav-account-name">{guestUser.name}</span>
-              <span className="nav-account-id">{guestUser.studentId}</span>
+              <span className="nav-account-name">{user.name}</span>
+              <span className="nav-account-id">{user.studentId}</span>
             </p>
             <form action={logout}>
               <button className="enter is-danger" type="submit">

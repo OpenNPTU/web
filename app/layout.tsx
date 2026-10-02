@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_TC, Poiret_One } from "next/font/google";
 import Script from "next/script";
-import { getSession } from "@/lib/session";
+import { getSession, isStudent } from "@/lib/session";
 import { SiteNav } from "./site-nav";
 import "./globals.css";
 
@@ -42,7 +42,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="theme-boot" strategy="beforeInteractive">
           {themeBoot}
         </Script>
-        <SiteNav signedIn={session != null} />
+        <SiteNav
+          user={
+            session && isStudent(session)
+              ? { name: session.name, studentId: session.studentId }
+              : null
+          }
+        />
         {children}
       </body>
     </html>

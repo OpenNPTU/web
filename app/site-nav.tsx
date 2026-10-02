@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { AccountMenu } from "./account-menu";
+import { AccountMenu, type NavUser } from "./account-menu";
 import { ThemeSwitch } from "./theme-switch";
 
-export function SiteNav({ signedIn = false }: { signedIn?: boolean }) {
+export function SiteNav({ user = null }: { user?: NavUser | null }) {
   return (
     <nav className="site-nav" aria-label="主要">
       <Link href="/" className="site-brand">
@@ -12,12 +12,12 @@ export function SiteNav({ signedIn = false }: { signedIn?: boolean }) {
       </Link>
       <div className="site-nav-end">
         <ThemeSwitch />
-        {signedIn ? (
+        {user ? (
           <Link href="/dashboard" className="nav-login">
             總覽
           </Link>
         ) : null}
-        <AccountMenu signedIn={signedIn} />
+        <AccountMenu user={user} />
       </div>
     </nav>
   );

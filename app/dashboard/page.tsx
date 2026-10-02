@@ -11,6 +11,9 @@ export const metadata: Metadata = {
 export default async function DashboardPage() {
   const session = await requireSession();
   const now = taipeiClock();
+  const who = isStudent(session)
+    ? { name: session.name, meta: [session.studentId, session.semester].filter(Boolean).join(" · ") }
+    : { name: guestUser.name, meta: `${guestUser.department} · ${guestUser.className}` };
   const courses = (
     <section className="dash-panel" aria-labelledby="courses-heading">
       <div className="dash-panel-head">
@@ -25,12 +28,13 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader eyebrow={dateLabel()} title={`${greetingForHour(now.hour)}，${guestUser.name}`}>
-        <p className="dash-meta">
-          {guestUser.department}
-          {" · "}
-          {guestUser.className}
-        </p>
+      <PageHeader eyebrow={dateLabel()} title={`${greetingForHour(now.hour)}，${who.name}`}>
+        <p className="dash-meta">{who.meta}</p>
+        {isStudent(session) && session.warning ? (
+          <p className="dash-warning" role="status">
+            {session.warning}
+          </p>
+        ) : null}
       </PageHeader>
 
       {isStudent(session) ? (
